@@ -70,7 +70,7 @@ public class ReservaDAO {
         String sql = """
       SELECT r.id_reserva, l.nombre AS nombre_local, l.ciudad, r.fecha, r.turno, r.personas, u.nombre AS nombre_usuario
                   FROM reserva r
-                  JOIN local l ON r.id_local = l.id
+                  JOIN local l ON r.id_local = l.id_local
                   JOIN usuarios u ON r.id_usuario = u.id
                   ORDER BY r.fecha DESC
     """;
@@ -83,6 +83,7 @@ public class ReservaDAO {
             rc.setFecha(rs.getDate("fecha").toString());
             rc.setTurno(rs.getTime("turno").toString());
             rc.setPersonas(rs.getInt("personas"));
+            rc.setNombreUsuario(rs.getString("nombre_usuario")); // 👈 esta línea faltaba
 
             return rc;
         });
