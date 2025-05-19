@@ -1,9 +1,20 @@
 package com.olympoburgers.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ResenaDTO {
+
+    @JsonProperty("gmail")
     private String gmail;
+
+    @JsonProperty("id_local")
     private int idLocal;
+
+    @JsonProperty("estrellas")
     private int estrellas;
+
+
+    @JsonProperty("comentario")
     private String comentario;
 
     public String getGmail() { return gmail; }

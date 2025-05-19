@@ -1,6 +1,10 @@
 package com.olympoburgers.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class LocalConValoracion {
+
+    @JsonProperty("id_local")
     private int idLocal;
     private String nombre;
     private String direccion;

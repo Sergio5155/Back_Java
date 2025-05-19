@@ -20,6 +20,7 @@ public class ObtenerResenasAction {
             return ResponseEntity.ok(lista);
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("🔍 Cargando reseñas para local ID: " + idLocal);
             return ResponseEntity.status(500).body("Error al obtener reseñas");
         }
     }
