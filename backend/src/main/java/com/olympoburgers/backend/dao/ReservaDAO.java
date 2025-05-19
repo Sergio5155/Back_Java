@@ -1,6 +1,7 @@
 package com.olympoburgers.backend.dao;
 
 import com.olympoburgers.backend.dto.ReservaDTO;
+import com.olympoburgers.backend.excepciones.PlazasInsuficientesException;
 import com.olympoburgers.backend.model.ReservaCliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -24,18 +25,21 @@ public class ReservaDAO {
         Integer total = jdbc.queryForObject(
                 "SELECT COALESCE(SUM(personas), 0) FROM reserva WHERE id_local = ? AND fecha = CAST(? AS DATE) AND turno = ?",
                 Integer.class,
-                dto.getIdLocal(), dto.getFecha(), java.sql.Time.valueOf(dto.getTurno())
+                dto.getIdLocal(), dto.getFecha(), java.sql.Time.valueOf(dto.getTurno() + ":00")
 
         );
 
         if (total + dto.getPersonas() > 20) {
-            throw new IllegalStateException("Aforo completo para ese turno");
+            int disponibles = 20 - total;
+            throw new PlazasInsuficientesException("Solo quedan " + disponibles + " plazas disponibles para ese turno");
         }
+
+
 
         jdbc.update(
                 "INSERT INTO reserva (id_usuario, id_local, fecha, turno, personas) VALUES (?, ?, ?, ?, ?)",
                 idUsuario, dto.getIdLocal(), java.sql.Date.valueOf(dto.getFecha())
-                , java.sql.Time.valueOf(dto.getTurno())
+                , java.sql.Time.valueOf(dto.getTurno() + ":00")
                 , dto.getPersonas()
         );
     }
@@ -64,11 +68,11 @@ public class ReservaDAO {
     }
     public List<ReservaCliente> obtenerTodasLasReservas() {
         String sql = """
-        SELECT r.id_reserva, l.nombre AS nombre_local, l.ciudad, r.fecha, r.turno, r.personas, u.gmail
-        FROM reserva r
-        JOIN usuarios u ON r.id_usuario = u.id
-        JOIN local l ON r.id_local = l.id_local
-        ORDER BY r.fecha, r.turno
+      SELECT r.id_reserva, l.nombre AS nombre_local, l.ciudad, r.fecha, r.turno, r.personas, u.nombre AS nombre_usuario
+                  FROM reserva r
+                  JOIN local l ON r.id_local = l.id
+                  JOIN usuarios u ON r.id_usuario = u.id
+                  ORDER BY r.fecha DESC
     """;
 
         return jdbc.query(sql, (rs, rowNum) -> {
@@ -79,6 +83,7 @@ public class ReservaDAO {
             rc.setFecha(rs.getDate("fecha").toString());
             rc.setTurno(rs.getTime("turno").toString());
             rc.setPersonas(rs.getInt("personas"));
+
             return rc;
         });
     }

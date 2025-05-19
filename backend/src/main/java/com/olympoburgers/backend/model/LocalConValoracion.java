@@ -11,7 +11,11 @@ public class LocalConValoracion {
     private String ciudad;
     private String telefono;
     private String foto;
+
+    @JsonProperty("media_estrellas")
     private double mediaEstrellas;
+
+    @JsonProperty("total_valoraciones")
     private int totalValoraciones;
 
     // Getters y setters

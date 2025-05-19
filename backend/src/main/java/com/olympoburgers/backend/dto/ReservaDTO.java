@@ -1,7 +1,11 @@
 package com.olympoburgers.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ReservaDTO {
     private String gmail;
+
+    @JsonProperty("id_local")
     private int idLocal;
     private String fecha;   // formato YYYY-MM-DD
     private String turno;    // formato HH:MM

@@ -1,12 +1,18 @@
 package com.olympoburgers.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ReservaCliente {
+
+    @JsonProperty("id_reserva")
     private int idReserva;
+    @JsonProperty("nombre_local")
     private String nombreLocal;
     private String ciudad;
     private String fecha;
     private String turno;
     private int personas;
+    private String nombreUsuario;
 
     public int getIdReserva() { return idReserva; }
     public void setIdReserva(int idReserva) { this.idReserva = idReserva; }
@@ -25,4 +31,7 @@ public class ReservaCliente {
 
     public int getPersonas() { return personas; }
     public void setPersonas(int personas) { this.personas = personas; }
+
+    public String getNombreUsuario() { return nombreUsuario; }
+    public void setNombreUsuario(String nombreUsuario) { this.nombreUsuario = nombreUsuario; }
 }
